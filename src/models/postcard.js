@@ -5,7 +5,8 @@ import mongoose from 'mongoose';
 const PostcardSchema = new mongoose.Schema({
   title: String,
   description: String,
-  owner: []
+  performance: Number,
+  owner: [String]
 });
 
 // dkjgaildahs
