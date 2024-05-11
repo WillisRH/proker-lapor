@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '@/components/navbar';
 import { useParams } from 'next/navigation';
+import { isAdmin } from '@/helper/isAdmin';
 
 export default function PostcardDetailPage() {
   const router = useRouter();
@@ -14,12 +15,15 @@ export default function PostcardDetailPage() {
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
+  const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
-    const fetchPostcard = async () => {
+    const fetchData = async () => {
       try {
         const response = await axios.get(`/api/postcard/id?id=${postcardid}`);
         setPostcard(response.data.postcard);
+        const isAdminUser = await isAdmin();
+        setAdmin(isAdminUser);
       } catch (error) {
         console.error('Error fetching postcard:', error);
       } finally {
@@ -28,16 +32,18 @@ export default function PostcardDetailPage() {
     };
 
     if (postcardid) {
-      fetchPostcard();
+      fetchData();
     }
   }, [postcardid]);
 
   const handleTitleClick = () => {
+    if (!admin) return; // Don't allow editing if not admin
     setIsEditingTitle(true);
     setNewTitle(postcard.title);
   };
 
   const handleDescriptionClick = () => {
+    if (!admin) return; // Don't allow editing if not admin
     setIsEditingDescription(true);
     setNewDescription(postcard.description);
   };
@@ -71,10 +77,10 @@ export default function PostcardDetailPage() {
   };
 
   const handleDelete = async () => {
+    if (!admin) return; // Only allow deletion if admin
     try {
       await axios.delete(`/api/postcard/id?id=${postcardid}`);
-      // Redirect to a different page or perform any additional actions after deletion
-      router.push('/')
+      router.push('/');
     } catch (error) {
       console.error('Error deleting postcard:', error);
     }
@@ -106,7 +112,7 @@ export default function PostcardDetailPage() {
             ) : (
               <h2
                 onClick={handleTitleClick}
-                className="text-xl font-bold mb-4 text-gray-800 cursor-pointer"
+                className={`text-xl font-bold mb-4 text-gray-800 ${admin ? 'cursor-copy' : ''}`}
               >
                 {postcard.title}
               </h2>
@@ -121,7 +127,7 @@ export default function PostcardDetailPage() {
             ) : (
               <p
                 onClick={handleDescriptionClick}
-                className="text-gray-800 mb-4 cursor-pointer"
+                className={`text-gray-800 mb-4 ${admin ? 'cursor-copy' : ''}`}
               >
                 {postcard.description}
               </p>
@@ -131,9 +137,11 @@ export default function PostcardDetailPage() {
                 Save
               </button>
             )}
-            <button onClick={handleDelete} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded bottom-2 left-2">
-              Delete
-            </button>
+            {admin && ( // Only render delete button if admin
+              <button onClick={handleDelete} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded bottom-2 left-2">
+                Delete
+              </button>
+            )}
           </div>
         ) : (
           <p className="text-xl font-semibold text-center text-gray-800 mt-8">No postcard found.</p>
@@ -142,3 +150,4 @@ export default function PostcardDetailPage() {
     </div>
   );
 }
+

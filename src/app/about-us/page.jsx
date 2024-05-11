@@ -9,7 +9,7 @@ export default function AboutMe() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-4 text-gray-800">About Me</h1>
         <p className="text-lg text-gray-800">
-          I created this website for my "Program Kerja" to join the MPK. The purpose of this website is to showcase my skills and achievements, as well as to provide information about my candidacy for the MPK position. 
+          Perkenalkan nama saya Willis Rihatman, saya berminat terhadap organisasi mpk di sekolah saya, oleh karena itu dengan mengikuti tata tertib aturan sekolah, saya membuat program kerja yang saya namakan "LAPOR", kegunaan web ini adalah untuk mencatat performa anggota organisasi serta organisasi yang dinaunginya, aplikasi ini dibuat menggunakan Next.JS dan mongodb sebagai databasenya. Kurang lebihnya mohon maaf, Terimakasih. 
         </p>
         {/* Centered image */}
         <div className="flex justify-center mt-8">

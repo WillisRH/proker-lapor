@@ -21,6 +21,8 @@ export function middleware(request) {
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL('/login', request.nextUrl));
   }
+
+  
 }
 
 // It specifies the paths for which this middleware should be executed. 
@@ -31,6 +33,6 @@ export const config = {
     '/profile',
     '/login',
     '/signup',
-    '/new'
+    '/new',
   ]
 };

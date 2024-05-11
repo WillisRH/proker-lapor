@@ -12,6 +12,7 @@ export default function ProfilePage() {
         try {
             const res = await axios.get('/api/users/me');
             setUserData(res.data.data);
+            console.log(res.data.data)
         } catch (error) {
             console.error("Failed to get user details:", error.message);
         }
