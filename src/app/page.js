@@ -6,6 +6,7 @@ import Postcard from '@/components/postcard';
 import { useState, useEffect } from 'react'; 
 import axios from 'axios'; // Import axios for making HTTP requests
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import Link from 'next/link';
 
 export default function Home() {
   const [postcards, setPostcards] = useState([]);
@@ -60,14 +61,17 @@ export default function Home() {
 
         {/* <NewPostcardForm />  */}
 
+
+<Link href={"/about-us"}>
         <div className="mb-8"> {/* Added margin bottom */}
           <div className="bg-gray-100 p-6 rounded-lg shadow-md text-black">
             <h1 className="font-bold text-2xl mb-2">Mading Ekstrakulikuler dan Osis</h1>
           </div>
         </div>
+        </Link>
 
         {isLoading ? (
-          <div>Loading...</div> // Show a loading indicator
+          <div className='text-gray-800 text-2xl'>Loading...</div> // Show a loading indicator
         ) : (
           <div className="flex flex-wrap justify-center gap-4"> 
             {postcards.map((post) => (

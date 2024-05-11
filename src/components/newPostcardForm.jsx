@@ -1,11 +1,13 @@
 "use client"
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 
 function NewPostcardForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,8 +21,9 @@ function NewPostcardForm() {
 
       if (response.ok) { 
         console.log('Postcard saved successfully');
-        const savedPostcard = await reponse.json();
+        const savedPostcard = await response.json();
         // Update your postcard state to refresh the display using the savedPostcard data 
+        router.push('/')
       } else {
         console.error('Failed to save postcard:', response.status, response.statusText)
         // Display an error message to the user
