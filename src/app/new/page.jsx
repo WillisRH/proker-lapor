@@ -3,26 +3,28 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from "@/components/navbar";
 import NewPostcardForm from "@/components/newPostcardForm";
+import restrictAccess from '@/helper/restrictAccess';
+import { isVerified } from '@/helper/isVerified';
 
-const restrictAccess = (router) => {
-  // Get the current date
-  const currentDate = new Date();
-  
-  // Extract the day of the month
-  const dayOfMonth = currentDate.getDate();
-  
-  // Check if it's the 11th day of the month
-  if (dayOfMonth !== 11) {
-    // If it's not the 11th day, redirect to a page indicating access is denied
-    router.push('/');       
-  }
-};
+
 
 export default function New() {
   const router = useRouter();
 
   useEffect(() => {
-    restrictAccess(router);
+    const checkVerified = async() => {
+      try {
+        const verified = await isVerified();
+        if (!verified) {
+          router.push('/faq');
+          return;
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    checkVerified();
+    restrictAccess;
   }, []); // Run only once on component mount
 
   return (

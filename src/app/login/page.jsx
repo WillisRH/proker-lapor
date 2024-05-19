@@ -34,24 +34,25 @@ export default function LoginPage() {
           Email
         </label>
         <input
-          id="email"
-          type="email"
-          value={user.email}
-          onChange={(e) => setUser({ ...user, email: e.target.value })}
-          className="appearance-none mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-400 focus:ring-opacity-50"
-          placeholder="Enter your email"
-        />
+  id="email"
+  type="email"
+  value={user.email}
+  onChange={(e) => setUser({ ...user, email: e.target.value })}
+  className="appearance-none mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-400 focus:ring-opacity-50 text-black"
+  placeholder="Enter your email"
+/>
         <label htmlFor="password" className="block mt-4 text-sm font-medium text-gray-700">
           Password
         </label>
         <input
-          id="password"
-          type="password"
-          value={user.password}
-          onChange={(e) => setUser({ ...user, password: e.target.value })}
-          className="appearance-none mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-400 focus:ring-opacity-50"
-          placeholder="Enter your password"
-        />
+  id="password"
+  type="password"
+  value={user.password}
+  onChange={(e) => setUser({ ...user, password: e.target.value })}
+  className="appearance-none mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-400 focus:ring-opacity-50 text-black"
+  placeholder="Enter your password"
+/>
+
         <button
           onClick={onLogin}
           disabled={loading}

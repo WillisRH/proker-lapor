@@ -41,7 +41,7 @@ function NewPostcardForm() {
 
   return (
     <div className="bg-white p-6 rounded-md shadow-md mt-8">
-      <h2 className="text-xl font-bold mb-4 text-center text-black">Create a New Postcard</h2>
+      <h2 className="text-xl font-bold mb-4 text-center text-black">It's time for you to post, Create a New Postcard</h2>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

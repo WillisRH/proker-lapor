@@ -6,7 +6,8 @@ const PostcardSchema = new mongoose.Schema({
   title: String,
   description: String,
   performance: Number,
-  owner: [String]
+  owner: [String],
+  privatemsg: String,
 });
 
 // dkjgaildahs

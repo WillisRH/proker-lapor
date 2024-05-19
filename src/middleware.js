@@ -6,7 +6,7 @@ export function middleware(request) {
   const path = request.nextUrl.pathname;
 
   // Define paths that are considered public (accessible without a token)
-  const isPublicPath = path === '/login' || path === '/signup' || path === '/verifyemail';
+  const isPublicPath = path === '/login' || path === '/signup';
 
   // Get the token from the cookies
   const token = request.cookies.get('token')?.value || '';
@@ -21,8 +21,6 @@ export function middleware(request) {
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL('/login', request.nextUrl));
   }
-
-  
 }
 
 // It specifies the paths for which this middleware should be executed. 

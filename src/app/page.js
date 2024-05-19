@@ -7,11 +7,20 @@ import { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for making HTTP requests
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import Link from 'next/link';
+import { isVerified } from '@/helper/isVerified';
+import ImportantButton from '@/components/importantbutton';
 
 export default function Home() {
   const [postcards, setPostcards] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // For loading state
   const router = useRouter(); // Initialize useRouter
+  // const verify = await isVerified();
+  // console.log(isVerified)
+  
+  const goToProfile = () => {
+    // Implement your navigation to the profile page here
+    router.push('/profile');
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +33,11 @@ export default function Home() {
           throw new Error('Failed to fetch postcards'); 
         } 
 
+        const verified = await isVerified();
+        if (!verified) {
+          router.push('/faq');
+          return;
+        }
         const data = await response.json();
         setPostcards(data.postcards); // Assuming the API returns { postcards: [...] }
         console.log(data.postcards)
@@ -52,9 +66,7 @@ export default function Home() {
       <Navbar /> {/* Navbar at the top */}
       
       {/* Logout button at the bottom left */}
-      <button onClick={logout} className="fixed bottom-0 left-0 m-4 px-4 py-2 bg-red-500 text-white rounded">
-        Logout
-      </button>
+      <ImportantButton />
 
       <div className="min-h-screen flex flex-col items-center justify-center"> 
         {/* Center the postcards container */}
