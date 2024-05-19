@@ -7,20 +7,19 @@ connectMongoDB();
 async function POST(request) {
   try {
     const reqBody = await request.json();
-    const { username, email, password } = reqBody;
+    const { username, password } = reqBody;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
 
     if (user) {
       return new Response(JSON.stringify({ error: "User already exists" }), { status: 400 });
     }
 
-    const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(password, salt);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     const newUser = new User({
       username,
-      email,
+      email: `${username}@lapor.sman12`,
       password: hashedPassword,
     });
 

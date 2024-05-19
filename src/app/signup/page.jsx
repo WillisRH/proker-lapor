@@ -7,19 +7,29 @@ import axios from "axios";
 export default function SignupPage() {
   const router = useRouter();
   const [user, setUser] = useState({
-    email: "",
-    password: "",
     username: "",
+    password: "",
   });
 
   const onSignup = async () => {
     try {
-      const response = await axios.post("/api/users/signup", user);
+      const response = await axios.post("/api/users/signup", {
+        ...user,
+        email: `${user.username}@lapor.com`,
+      });
       router.push("/login");
     } catch (error) {
       console.log("Signup failed", error.message);
     }
   };
+
+  const handleUsernameChange = (e) => {
+    const inputChar = e.target.value.slice(-1);
+    if (inputChar.match(/[a-zA-Z0-9-_]/)) {
+      setUser({ ...user, username: e.target.value });
+    }
+  };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
@@ -30,7 +40,6 @@ export default function SignupPage() {
           </h2>
         </div>
         <div className="mt-8 space-y-6">
-          {/* Input fields */}
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="username" className="sr-only">
@@ -43,36 +52,21 @@ export default function SignupPage() {
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 value={user.username}
-                onChange={(e) =>
-                  setUser({ ...user, username: e.target.value })
-                }
+                onChange={handleUsernameChange} // Updated onChange handler
                 placeholder="Username"
               />
             </div>
-            {/* ... Other input fields (email, password) styled similarly */}
-    <div>
-       <label htmlFor="email" className="sr-only">email</label>
-       <input
-          id="email"
-          type="text"
-          autoComplete="email"  
-          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-          value={user.email}
-          onChange={(e) => setUser({ ...user, email: e.target.value })}
-          placeholder="Email"
-        />
-    </div>
-    <div>
-       <label htmlFor="password" className="sr-only">password</label>
-       <input
-          id="password"
-          type="password" 
-          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-          value={user.password}
-          onChange={(e) => setUser({ ...user, password: e.target.value })}
-          placeholder="Password"
-        />
-    </div>
+            <div>
+               <label htmlFor="password" className="sr-only">password</label>
+               <input
+                  id="password"
+                  type="password" 
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  value={user.password}
+                  onChange={(e) => setUser({ ...user, password: e.target.value })}
+                  placeholder="Password"
+                />
+            </div>
           </div>
 
           <div>
@@ -95,4 +89,3 @@ export default function SignupPage() {
     </div>
   );
 }
-

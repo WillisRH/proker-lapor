@@ -8,6 +8,7 @@ import { useState } from 'react';
 function NewPostcardForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [privateMsg, setprivateMsg] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (event) => {
@@ -44,6 +45,7 @@ function NewPostcardForm() {
     // Reset form fields
     setTitle('');
     setDescription('');
+    setprivateMsg('');
 };
 
 
@@ -71,6 +73,18 @@ function NewPostcardForm() {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)} 
+            className="w-full border border-gray-300 p-2 rounded" 
+            required 
+            style={{ color: 'black' }} // Inline style for input text color
+          />
+        </div>
+        
+        <div className="mb-6">
+          <label htmlFor="privatemsg" className="block text-black font-bold mb-2">Private Message (Optional):</label>
+          <textarea 
+            id="privatemsg"
+            value={privateMsg}
+            onChange={(e) => setprivateMsg(e.target.value)} 
             className="w-full border border-gray-300 p-2 rounded" 
             required 
             style={{ color: 'black' }} // Inline style for input text color

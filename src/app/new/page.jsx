@@ -24,8 +24,8 @@ export default function New() {
       }
     }
     checkVerified();
-    restrictAccess;
-  }, []); // Run only once on component mount
+    restrictAccess(router);
+  }, [router]); // Run only once on component mount
 
   return (
     <div>

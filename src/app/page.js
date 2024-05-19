@@ -72,6 +72,8 @@ export default function Home() {
 
         {isLoading ? (
           <div className='text-gray-800 text-2xl'>Loading...</div> // Show a loading indicator
+        ) : postcards.length === 0 ? (
+          <div className='text-gray-800 text-2xl'>There is no postcard yet.</div> // Show message if no postcards
         ) : (
           <div className="flex flex-wrap justify-center gap-4"> 
             {postcards.map((post) => (

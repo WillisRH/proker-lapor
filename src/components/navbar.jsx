@@ -11,9 +11,9 @@ const restrictaccess = restrictAccess;
 function Navbar() {
   const router = useRouter();
 
-  useEffect(() => {
-    restrictaccess;
-  }, [router]);
+  // useEffect(() => {
+  //   restrictaccess;
+  // }, [router]);
 
   // Get the current date
   const currentDate = new Date();

@@ -116,11 +116,12 @@ export default function PostcardDetailPage() {
         {postcard.owner.map((owner, index) => (
               <p key={index} className="text-gray-800 mb-1 ">{owner}</p>
             ))}
-            {postcard.owner.map((owner, index) => (
+            {/* {postcard.owner.map((owner, index) => (
               <p key={index} className="text-gray-800 mb-1 fixed bottom-0 left-3">{owner}</p>
-            ))}
+            ))} */}
         {postcard ? (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+            <p className="text-gray-800 mb-1 fixed bottom-0 left-3">Postcard ID: {postcard._id}</p>
             {isEditingTitle ? (
               <input
                 type="text"
