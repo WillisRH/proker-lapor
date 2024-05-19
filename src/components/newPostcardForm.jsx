@@ -1,4 +1,5 @@
 "use client"
+import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -13,10 +14,17 @@ function NewPostcardForm() {
     event.preventDefault();
 
     try {
+      const res = await axios.get('/api/users/me');
+      console.log(res.data)
       const response = await fetch('/api/postcard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ 
+          title, 
+          description,
+          owner: [res.data.data._id]
+
+         }),
       });
 
       if (response.ok) { 

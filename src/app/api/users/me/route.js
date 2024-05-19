@@ -19,6 +19,7 @@ export async function GET(request) {
         if (tokenData.email === DEFAULT_ADMIN_EMAIL) {
             // Send default admin data
             const adminData = {
+                _id: tokenData._id,
                 username: "default-admin",
                 email: DEFAULT_ADMIN_EMAIL,
                 isVerified: true,

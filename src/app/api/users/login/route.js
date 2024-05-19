@@ -20,7 +20,7 @@ async function POST(request) {
             if (email === DEFAULT_ADMIN_EMAIL && password === DEFAULT_ADMIN_PASSWORD) {
                 // Create token data for the default admin
                 const tokenData = {
-                    id: "0a", // You can use any unique identifier here
+                    _id: "0a", // You can use any unique identifier here
                     username: "default-admin",
                     email: DEFAULT_ADMIN_EMAIL
                 };

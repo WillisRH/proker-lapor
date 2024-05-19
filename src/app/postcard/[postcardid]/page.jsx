@@ -5,6 +5,7 @@ import axios from 'axios';
 import Navbar from '@/components/navbar';
 import { useParams } from 'next/navigation';
 import { isAdmin } from '@/helper/isAdmin';
+import { isVerified } from '@/helper/isVerified';
 
 export default function PostcardDetailPage() {
   const router = useRouter();
@@ -18,6 +19,18 @@ export default function PostcardDetailPage() {
   const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
+    const checkVerified = async() => {
+      try {
+        const verified = await isVerified();
+        if (!verified) {
+          router.push('/faq');
+          return;
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    checkVerified();
     const fetchData = async () => {
       try {
         const response = await axios.get(`/api/postcard/id?id=${postcardid}`);
@@ -99,6 +112,13 @@ export default function PostcardDetailPage() {
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 py-8 relative">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Postcard Detail</h1>
+        <p className="text-gray-800">Owner ID:</p>
+        {postcard.owner.map((owner, index) => (
+              <p key={index} className="text-gray-800 mb-1 ">{owner}</p>
+            ))}
+            {postcard.owner.map((owner, index) => (
+              <p key={index} className="text-gray-800 mb-1 fixed bottom-0 left-3">{owner}</p>
+            ))}
         {postcard ? (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             {isEditingTitle ? (
@@ -150,4 +170,3 @@ export default function PostcardDetailPage() {
     </div>
   );
 }
-
