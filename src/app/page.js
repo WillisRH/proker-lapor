@@ -17,10 +17,6 @@ export default function Home() {
   // const verify = await isVerified();
   // console.log(isVerified)
   
-  const goToProfile = () => {
-    // Implement your navigation to the profile page here
-    router.push('/profile');
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,14 +48,6 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const logout = async () => {
-    try {
-      await axios.get('/api/users/logout');
-      router.push('/login');
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   return (
     <div> {/* Optional container */}
