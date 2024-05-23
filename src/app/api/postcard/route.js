@@ -5,10 +5,10 @@ import { NextResponse } from 'next/server';
 export async function POST(request) {
   let response;
   try {
-    const { title, description, owner } = await request.json();
+    const { title, description, owner, privatemsg, performance } = await request.json();
     await connectMongoDB();
 
-    const newPostcard = new Postcard({ title, description, owner });
+    const newPostcard = new Postcard({ title, description, owner, privatemsg, performance });
     await newPostcard.save();
 
     response = NextResponse.json({ message: 'Postcard saved' }, { status: 201 });
@@ -20,8 +20,6 @@ export async function POST(request) {
   }
 }
 
-
-// Route handler for fetching all postcards
 export async function GET(request) {
   let response;
   const start = Date.now();

@@ -1,4 +1,5 @@
-"use client"
+'use client';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -6,6 +7,8 @@ import Navbar from '@/components/navbar';
 import { useParams } from 'next/navigation';
 import { isAdmin } from '@/helper/isAdmin';
 import { isVerified } from '@/helper/isVerified';
+import PerformanceChart from '@/components/PerformanceChart';
+import { isOwner } from '@/helper/isOwner';
 
 export default function PostcardDetailPage() {
   const router = useRouter();
@@ -17,9 +20,10 @@ export default function PostcardDetailPage() {
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [admin, setAdmin] = useState(false);
+  const [owner, setOwner] = useState(false);
 
   useEffect(() => {
-    const checkVerified = async() => {
+    const checkVerified = async () => {
       try {
         const verified = await isVerified();
         if (!verified) {
@@ -27,16 +31,24 @@ export default function PostcardDetailPage() {
           return;
         }
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
-    }
+    };
     checkVerified();
+
     const fetchData = async () => {
       try {
         const response = await axios.get(`/api/postcard/id?id=${postcardid}`);
-        setPostcard(response.data.postcard);
+        const postcardData = response.data.postcard;
+        setPostcard(postcardData);
+
         const isAdminUser = await isAdmin();
         setAdmin(isAdminUser);
+
+        const isOwnerUser = await Promise.all(postcardData.owner.map(async ownerId => await isOwner(ownerId)));
+        setOwner(isOwnerUser.some(status => status));
+        console.log("OKASPNDI)ASDNAIOSDNAoi", isOwnerUser)
+        
       } catch (error) {
         console.error('Error fetching postcard:', error);
       } finally {
@@ -50,13 +62,13 @@ export default function PostcardDetailPage() {
   }, [postcardid]);
 
   const handleTitleClick = () => {
-    if (!admin) return; // Don't allow editing if not admin
+    if (!admin && !owner) return; // Don't allow editing if not admin or owner
     setIsEditingTitle(true);
     setNewTitle(postcard.title);
   };
 
   const handleDescriptionClick = () => {
-    if (!admin) return; // Don't allow editing if not admin
+    if (!admin && !owner) return; // Don't allow editing if not admin or owner
     setIsEditingDescription(true);
     setNewDescription(postcard.description);
   };
@@ -111,17 +123,14 @@ export default function PostcardDetailPage() {
     <div>
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 py-8 relative">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Postcard Detail</h1>
-        <p className="text-gray-800">Owner ID:</p>
-        {postcard.owner.map((owner, index) => (
-              <p key={index} className="text-gray-800 mb-1 ">{owner}</p>
-            ))}
-            {/* {postcard.owner.map((owner, index) => (
-              <p key={index} className="text-gray-800 mb-1 fixed bottom-0 left-3">{owner}</p>
-            ))} */}
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">{postcard.title}</h1>
         {postcard ? (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             <p className="text-gray-800 mb-1 fixed bottom-0 left-3">Postcard ID: {postcard._id}</p>
+            <p className="text-gray-800 mb-1 fixed bottom-5 left-3">Owner ID:</p>
+            {postcard.owner.map((owner, index) => (
+              <p key={index} className="fixed bottom-2 left-0 m-4 px-20 text-black">{owner}</p>
+            ))}
             {isEditingTitle ? (
               <input
                 type="text"
@@ -133,9 +142,9 @@ export default function PostcardDetailPage() {
             ) : (
               <h2
                 onClick={handleTitleClick}
-                className={`text-xl font-bold mb-4 text-gray-800 ${admin ? 'cursor-copy' : ''}`}
+                className={`text-xl font-bold mb-4 text-gray-800 ${admin || owner ? 'cursor-copy' : ''}`}
               >
-                {postcard.title}
+                Description:
               </h2>
             )}
             {isEditingDescription ? (
@@ -148,18 +157,36 @@ export default function PostcardDetailPage() {
             ) : (
               <p
                 onClick={handleDescriptionClick}
-                className={`text-gray-800 mb-4 ${admin ? 'cursor-copy' : ''}`}
+                className={`text-gray-800 mb-4 ${admin || owner ? 'cursor-copy' : ''}`}
               >
                 {postcard.description}
               </p>
             )}
-            {(isEditingTitle || isEditingDescription) && (
-              <button onClick={handleEditSubmit} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2">
+            {(admin || owner) && postcard.privatemsg && (
+              <div className="bg-gray-200 p-4 rounded-md mt-4">
+                <h3 className="text-lg font-bold mb-2 text-gray-800">Private Message:</h3>
+                <p className="text-gray-800">{postcard.privatemsg}</p>
+              </div>
+            )}
+            {(admin || owner) && postcard.performance && (
+              <div className="mt-6">
+                <h3 className="text-lg font-bold mb-2 text-gray-800">Performance:</h3>
+                <PerformanceChart performance={postcard.performance} />
+              </div>
+            )}
+            {(admin || owner) && (isEditingTitle || isEditingDescription) && (
+              <button
+                onClick={handleEditSubmit}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
                 Save
               </button>
             )}
             {admin && ( // Only render delete button if admin
-              <button onClick={handleDelete} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded bottom-2 left-2">
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded bottom-2 left-2"
+              >
                 Delete
               </button>
             )}
@@ -168,6 +195,15 @@ export default function PostcardDetailPage() {
           <p className="text-xl font-semibold text-center text-gray-800 mt-8">No postcard found.</p>
         )}
       </div>
+      {(admin || owner) && ( // Render "Add Month Performance" button for admin or owner
+              <div className="flex justify-center">
+              <button
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Add Month Performance
+              </button>
+            </div>
+            )}
     </div>
   );
 }

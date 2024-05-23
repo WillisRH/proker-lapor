@@ -1,14 +1,14 @@
-"use client"
+'use client';
+
 import axios from 'axios';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
 
 function NewPostcardForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [privateMsg, setprivateMsg] = useState('');
+  const [privateMsg, setPrivateMsg] = useState('');
+  const [performance, setPerformance] = useState(0);
   const router = useRouter();
 
   const handleSubmit = async (event) => {
@@ -16,25 +16,26 @@ function NewPostcardForm() {
 
     try {
       const res = await axios.get('/api/users/me');
-      console.log(res.data)
+      console.log(res.data);
       const response = await fetch('/api/postcard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           title, 
           description,
-          owner: [res.data.data._id]
-
-         }),
+          owner: [res.data.data._id],
+          privatemsg: privateMsg,
+          performance
+        }),
       });
 
       if (response.ok) { 
         console.log('Postcard saved successfully');
         const savedPostcard = await response.json();
         // Update your postcard state to refresh the display using the savedPostcard data 
-        router.push('/')
+        router.push('/');
       } else {
-        console.error('Failed to save postcard:', response.status, response.statusText)
+        console.error('Failed to save postcard:', response.status, response.statusText);
         // Display an error message to the user
       }
     } catch (error) {
@@ -45,9 +46,9 @@ function NewPostcardForm() {
     // Reset form fields
     setTitle('');
     setDescription('');
-    setprivateMsg('');
-};
-
+    setPrivateMsg('');
+    setPerformance(0);
+  };
 
   return (
     <div className="bg-white p-6 rounded-md shadow-md mt-8">
@@ -84,13 +85,25 @@ function NewPostcardForm() {
           <textarea 
             id="privatemsg"
             value={privateMsg}
-            onChange={(e) => setprivateMsg(e.target.value)} 
+            onChange={(e) => setPrivateMsg(e.target.value)} 
             className="w-full border border-gray-300 p-2 rounded" 
-            required 
             style={{ color: 'black' }} // Inline style for input text color
           />
         </div>
 
+        <div className="mb-6">
+          <label htmlFor="performance" className="block text-black font-bold mb-2">Performance:</label>
+          <input
+            type="range"
+            id="performance"
+            value={performance}
+            onChange={(e) => setPerformance(e.target.value)}
+            min="0"
+            max="100"
+            className="w-full"
+          />
+          <span className="block text-center text-black mt-2">{performance}%</span>
+        </div>
 
         <button type="submit" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
           Submit
