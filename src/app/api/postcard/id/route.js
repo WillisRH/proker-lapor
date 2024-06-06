@@ -30,7 +30,6 @@ export async function GET(request) {
     }
   }
   
-
   export async function DELETE(request) {
     let response;
     const start = Date.now();
@@ -42,11 +41,17 @@ export async function GET(request) {
       if (!id) {
         throw new Error('ID is missing');
       }
+  
+      // Delete the main postcard
       const deletedPostcard = await Postcard.findByIdAndDelete(id);
+  
       if (!deletedPostcard) {
         response = NextResponse.json({ error: 'Postcard not found' }, { status: 404 });
       } else {
-        response = NextResponse.json({ message: 'Postcard deleted successfully' }, { status: 200 });
+        // Delete all documents that refer to this postcard ID
+        const deletedRelatedDocuments = await Postcard.deleteMany({ referto: id });
+  
+        response = NextResponse.json({ message: 'Postcard and related data deleted successfully' }, { status: 200 });
       }
     } catch (error) {
       console.error('Error deleting postcard by ID:', error);

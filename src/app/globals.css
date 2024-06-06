@@ -47,18 +47,10 @@ body {
 /* Custom scrollbar */
 /* For Chrome, Safari, and Opera */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 0;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3); /* Adjust opacity as needed */
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity as needed */
-}
-
+/* Hide scrollbar track */
 ::-webkit-scrollbar-track {
-  background: transparent;
+  display: none;
 }

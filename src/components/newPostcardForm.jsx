@@ -2,52 +2,74 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import logodubes from '@/components/logodubes.png'
 
 function NewPostcardForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [privateMsg, setPrivateMsg] = useState('');
   const [performance, setPerformance] = useState(0);
+  const [postcards, setPostcards] = useState([]);
+  const [selectedPostcard, setSelectedPostcard] = useState(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchPostcards = async () => {
+      try {
+        const res = await axios.get('/api/users/me');
+        const userId = res.data.data._id;
+        const response = await axios.get(`/api/postcard?userId=${userId}`);
+        setPostcards(response.data.postcards);
+      } catch (error) {
+        console.error('Error fetching postcards:', error);
+      }
+    };
+
+    fetchPostcards();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const res = await axios.get('/api/users/me');
-      console.log(res.data);
+      const userId = res.data.data._id;
+      console.log("Selected ", selectedPostcard);
       const response = await fetch('/api/postcard', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ 
           title, 
           description,
-          owner: [res.data.data._id],
+          owner: [userId],
           privatemsg: privateMsg,
-          performance
+          referto: selectedPostcard,
+          performance, 
         }),
       });
 
       if (response.ok) { 
         console.log('Postcard saved successfully');
-        const savedPostcard = await response.json();
-        // Update your postcard state to refresh the display using the savedPostcard data 
         router.push('/');
       } else {
         console.error('Failed to save postcard:', response.status, response.statusText);
-        // Display an error message to the user
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Display an error message to the user
     }
 
-    // Reset form fields
     setTitle('');
     setDescription('');
     setPrivateMsg('');
     setPerformance(0);
+    setSelectedPostcard(null);
+  };
+
+  const handleTogglePostcard = (id) => {
+    setSelectedPostcard(selectedPostcard === id ? "" : id);
   };
 
   return (
@@ -64,7 +86,7 @@ function NewPostcardForm() {
             onChange={(e) => setTitle(e.target.value)} 
             className="w-full border border-gray-300 p-2 rounded" 
             required 
-            style={{ color: 'black' }} // Inline style for input text color
+            style={{ color: 'black' }}
           />
         </div>
 
@@ -76,7 +98,7 @@ function NewPostcardForm() {
             onChange={(e) => setDescription(e.target.value)} 
             className="w-full border border-gray-300 p-2 rounded" 
             required 
-            style={{ color: 'black' }} // Inline style for input text color
+            style={{ color: 'black' }}
           />
         </div>
         
@@ -87,7 +109,7 @@ function NewPostcardForm() {
             value={privateMsg}
             onChange={(e) => setPrivateMsg(e.target.value)} 
             className="w-full border border-gray-300 p-2 rounded" 
-            style={{ color: 'black' }} // Inline style for input text color
+            style={{ color: 'black' }}
           />
         </div>
 
@@ -103,6 +125,28 @@ function NewPostcardForm() {
             className="w-full"
           />
           <span className="block text-center text-black mt-2">{performance}%</span>
+        </div>
+
+        <h2 className="text-xl font-bold mb-4 text-center text-black">Refer To (Make sure to use this when you already have postcard):</h2>
+        <div className="mb-6">
+          {postcards.length > 0 ? (
+            <ul className="space-y-2">
+              {postcards.map(postcard => (
+                <li key={postcard._id} className="flex items-center justify-between p-2 border border-gray-300 rounded">
+                  <span style={{ color: 'black' }}>{postcard.title}</span>
+                  <button 
+                    type="button"
+                    onClick={() => handleTogglePostcard(postcard._id)}
+                    className={`p-2 rounded ${selectedPostcard === postcard._id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+                  >
+                    {selectedPostcard === postcard._id ? 'Selected' : 'Select'}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-black">You have no postcards.</p>
+          )}
         </div>
 
         <button type="submit" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">

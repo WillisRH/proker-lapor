@@ -32,6 +32,7 @@ export default function ProfilePage() {
                     <div className="bg-gray-200 p-4 rounded-lg shadow-md text-black">
                         <p className="text-lg">Email: {userData.email}</p>
                         <p className="text-lg">Username: {userData.username}</p>
+                        <p className="text-lg">ID: {userData._id}</p>
                         <p className="text-lg">Admin: {userData.isAdmin ? "Yes" : "No"}</p>
                         <p className="text-lg">Verified: {userData.isVerified ? "Yes" : "No"}</p>
                     </div>

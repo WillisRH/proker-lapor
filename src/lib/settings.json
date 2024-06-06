@@ -1,4 +1,5 @@
 {
-    "allowedDays": [23]
+    "allowedDays": [6],
+    "visibleToVerifiedUser": false
 }
   

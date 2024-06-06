@@ -77,7 +77,7 @@ export default function Home() {
         ) : (
           <div className="flex flex-wrap justify-center gap-4"> 
             {postcards.map((post) => (
-              <Postcard key={post._id} title={post.title} description={post.description} id={post._id} />
+              <Postcard key={post._id} title={post.title} description={post.description} id={post._id} createdat={post.createdAt} />
             ))}
           </div>
         )}

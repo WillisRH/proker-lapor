@@ -1,19 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, useRef } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '@/components/navbar';
-import { useParams } from 'next/navigation';
 import { isAdmin } from '@/helper/isAdmin';
 import { isVerified } from '@/helper/isVerified';
 import PerformanceChart from '@/components/PerformanceChart';
 import { isOwner } from '@/helper/isOwner';
+import moment from 'moment';
 
 export default function PostcardDetailPage() {
   const router = useRouter();
-  const postcardid = useParams().postcardid;
+  const { postcardid } = useParams();
   const [postcard, setPostcard] = useState(null);
+  const [referToPostcards, setReferToPostcards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -21,6 +22,8 @@ export default function PostcardDetailPage() {
   const [newDescription, setNewDescription] = useState('');
   const [admin, setAdmin] = useState(false);
   const [owner, setOwner] = useState(false);
+  const titleInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
 
   useEffect(() => {
     const checkVerified = async () => {
@@ -38,16 +41,16 @@ export default function PostcardDetailPage() {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/api/postcard/id?id=${postcardid}`);
-        const postcardData = response.data.postcard;
-        setPostcard(postcardData);
+        const response = await axios.get(`/api/postcard?id=${postcardid}`);
+        const { mainPostcard, refertoPostcards } = response.data.postcards;
+        setPostcard(mainPostcard);
+        setReferToPostcards(refertoPostcards);
 
         const isAdminUser = await isAdmin();
         setAdmin(isAdminUser);
 
-        const isOwnerUser = await Promise.all(postcardData.owner.map(async ownerId => await isOwner(ownerId)));
+        const isOwnerUser = await Promise.all(mainPostcard.owner.map(async ownerId => await isOwner(ownerId)));
         setOwner(isOwnerUser.some(status => status));
-        console.log("OKASPNDI)ASDNAIOSDNAoi", isOwnerUser)
         
       } catch (error) {
         console.error('Error fetching postcard:', error);
@@ -58,19 +61,41 @@ export default function PostcardDetailPage() {
 
     if (postcardid) {
       fetchData();
+    } else {
+      const fetchAllData = async () => {
+        try {
+          const response = await axios.get('/api/postcard');
+          setPostcard(response.data.postcards);
+        } catch (error) {
+          console.error('Error fetching postcards:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchAllData();
     }
   }, [postcardid]);
 
   const handleTitleClick = () => {
-    if (!admin && !owner) return; // Don't allow editing if not admin or owner
+    if (!admin && !owner) return;
     setIsEditingTitle(true);
     setNewTitle(postcard.title);
+    setTimeout(() => {
+      if (titleInputRef.current) {
+        titleInputRef.current.focus();
+      }
+    }, 100);
   };
 
   const handleDescriptionClick = () => {
-    if (!admin && !owner) return; // Don't allow editing if not admin or owner
+    if (!admin && !owner) return;
     setIsEditingDescription(true);
     setNewDescription(postcard.description);
+    setTimeout(() => {
+      if (descriptionInputRef.current) {
+        descriptionInputRef.current.focus();
+      }
+    }, 100);
   };
 
   const handleTitleChange = (event) => {
@@ -98,11 +123,11 @@ export default function PostcardDetailPage() {
   };
 
   const handleEditSubmit = () => {
-    handleSave(); // Save changes
+    handleSave();
   };
 
   const handleDelete = async () => {
-    if (!admin) return; // Only allow deletion if admin
+    if (!admin) return;
     try {
       await axios.delete(`/api/postcard/id?id=${postcardid}`);
       router.push('/');
@@ -119,48 +144,72 @@ export default function PostcardDetailPage() {
     );
   }
 
+  
+
+  // const performanceValues = [75, 88, 62, 32, 82, 98, 89, 90, 28.2]; 
+  
+  const performanceValues = [postcard.performance, ...referToPostcards.map(card => card.performance)];
+  const dateValues = [...referToPostcards.map(card => card.createdAt)]
+
+
+  
+
   return (
     <div>
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 py-8 relative">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">{postcard.title}</h1>
+        {isEditingTitle ? (
+          <input
+            type="text"
+            value={newTitle}
+            onChange={handleTitleChange}
+            onBlur={handleSave}
+            ref={titleInputRef}
+            className="text-3xl font-bold text-center mb-8 text-gray-800 focus:outline-none border-b-2 border-gray-500"
+          />
+        ) : (
+          <h1
+            className={`text-3xl font-bold text-center mb-8 text-gray-800 ${admin || owner ? 'cursor-copy' : ''}`}
+            onClick={handleTitleClick}
+          >
+            {postcard.title.toUpperCase()}
+          </h1>
+        )}
         {postcard ? (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             <p className="text-gray-800 mb-1 fixed bottom-0 left-3">Postcard ID: {postcard._id}</p>
-            <p className="text-gray-800 mb-1 fixed bottom-5 left-3">Owner ID:</p>
-            {postcard.owner.map((owner, index) => (
-              <p key={index} className="fixed bottom-2 left-0 m-4 px-20 text-black">{owner}</p>
-            ))}
-            {isEditingTitle ? (
-              <input
-                type="text"
-                value={newTitle}
-                onChange={handleTitleChange}
-                onBlur={handleSave}
-                className="text-xl font-bold mb-4 text-gray-800 focus:outline-none border-b-2 border-gray-500"
-              />
-            ) : (
-              <h2
-                onClick={handleTitleClick}
-                className={`text-xl font-bold mb-4 text-gray-800 ${admin || owner ? 'cursor-copy' : ''}`}
-              >
-                Description:
-              </h2>
+            {postcard.owner && (
+              <p className="text-gray-800 mb-1 fixed bottom-5 left-3">
+                Owner ID:{' '}
+                {postcard.owner.map((owner, index) => (
+                  <span key={index}>
+                    {index > 0 && ', '}
+                    {owner}
+                  </span>
+                ))}
+              </p>
             )}
+
             {isEditingDescription ? (
               <textarea
                 value={newDescription}
                 onChange={handleDescriptionChange}
                 onBlur={handleSave}
+                ref={descriptionInputRef}
                 className="text-gray-800 w-full h-40 mb-4 resize-none focus:outline-none border-b-2 border-gray-500"
               />
             ) : (
-              <p
-                onClick={handleDescriptionClick}
-                className={`text-gray-800 mb-4 ${admin || owner ? 'cursor-copy' : ''}`}
-              >
-                {postcard.description}
-              </p>
+              <div>
+                <h2 className='text-xl font-bold mb-4 text-gray-800'>
+                  Description:
+                </h2>
+                <p
+                  onClick={handleDescriptionClick}
+                  className={`text-gray-800 mb-4 ${admin || owner ? 'cursor-copy' : ''}`}
+                >
+                  {postcard.description}
+                </p>
+              </div>
             )}
             {(admin || owner) && postcard.privatemsg && (
               <div className="bg-gray-200 p-4 rounded-md mt-4">
@@ -171,7 +220,10 @@ export default function PostcardDetailPage() {
             {(admin || owner) && postcard.performance && (
               <div className="mt-6">
                 <h3 className="text-lg font-bold mb-2 text-gray-800">Performance:</h3>
-                <PerformanceChart performance={postcard.performance} />
+                <PerformanceChart performances={performanceValues}  />
+                <p className="text-gray-800 mt-2">
+                  Performance Report Created at <strong>{moment(postcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
+                </p>
               </div>
             )}
             {(admin || owner) && (isEditingTitle || isEditingDescription) && (
@@ -182,7 +234,7 @@ export default function PostcardDetailPage() {
                 Save
               </button>
             )}
-            {admin && ( // Only render delete button if admin
+            {admin && (
               <button
                 onClick={handleDelete}
                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded bottom-2 left-2"
@@ -194,16 +246,43 @@ export default function PostcardDetailPage() {
         ) : (
           <p className="text-xl font-semibold text-center text-gray-800 mt-8">No postcard found.</p>
         )}
-      </div>
-      {(admin || owner) && ( // Render "Add Month Performance" button for admin or owner
-              <div className="flex justify-center">
-              <button
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-              >
-                Add Month Performance
-              </button>
-            </div>
+        {referToPostcards.length > 0 && (
+          <div className="mt-8">
+            {referToPostcards.map(refertoPostcard => (
+              <div key={refertoPostcard._id} className="bg-gray-100 p-4 rounded-lg shadow-md mb-4">
+                <h1
+            className={`text-2xl font-bold text-center mb-8 text-gray-800 ${admin || owner ? 'cursor-copy' : ''}`}
+            onClick={handleTitleClick}
+          >
+            {moment(refertoPostcard.createdAt).format('MMMM Do YYYY, h:mm:ss a').toUpperCase()}
+          </h1>
+                <p className="text-gray-800">Title: {refertoPostcard.title}</p>
+                <p className="text-gray-800">Description: {refertoPostcard.description}</p>
+                {/* <p className="text-gray-800">Owner: {refertoPostcard.owner.join(', ')}</p> */}
+                {(admin || owner) && refertoPostcard.privatemsg && (
+              <div className="bg-gray-200 p-4 rounded-md mt-4">
+                <h3 className="text-lg font-bold mb-2 text-gray-800">Private Message:</h3>
+                <p className="text-gray-800">{refertoPostcard.privatemsg}</p>
+              </div>
             )}
+                <PerformanceChart performances={performanceValues} date={refertoPostcard} />
+                <p className="text-gray-800 mt-2">
+                  Performance Report Created at <strong>{moment(refertoPostcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {(admin || owner) && (
+        <div className="flex justify-center">
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Add Month Performance
+          </button>
+        </div>
+      )}
     </div>
   );
 }

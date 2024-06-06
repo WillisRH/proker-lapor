@@ -7,6 +7,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "LAPOR - LAPORAN ORGANISASI SISWA DAN EKSTRAKULIKULER",
   description: "Tempat dimana kamu bisa melaporkan kinerja kamu dan organisasi yang kamu naungi ^^",
+  icons: {
+    icon: [
+      '/favicon.ico'
+    ]
+  }
 }
 
 export default function RootLayout({ children }) {

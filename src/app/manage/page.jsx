@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '@/components/navbar';
@@ -8,18 +9,19 @@ import { isAdmin } from '@/helper/isAdmin';
 export default function ManageUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
   useEffect(() => {
     const checkAdmin = async () => {
+      const isAdminUser = await isAdmin();
+      if (!isAdminUser) {
+        router.push("/");
+        return;
+      }
+      fetchUsers();
+    };
 
-        const isAdminUser = await isAdmin();
-        if(!isAdminUser) {
-            router.push("/")
-            return;
-        }
-
-    }
     const fetchUsers = async () => {
       try {
         const response = await axios.get('/api/users');
@@ -31,7 +33,6 @@ export default function ManageUsers() {
       }
     };
 
-    fetchUsers();
     checkAdmin();
   }, []);
 
@@ -44,11 +45,24 @@ export default function ManageUsers() {
     }
   };
 
+  const filteredUsers = users.filter(user =>
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       <Navbar />
       <div className="container mx-auto py-8 text-black">
         <h1 className="text-3xl font-bold text-center mb-8">Manage Users</h1>
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search by username"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
         {loading ? (
           <p className="text-center">Loading...</p>
         ) : (
@@ -64,7 +78,7 @@ export default function ManageUsers() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(user => (
+                {filteredUsers.map(user => (
                   <tr key={user._id}>
                     <td className="py-2 px-4 border-b border-gray-200">{user.username}</td>
                     <td className="py-2 px-4 border-b border-gray-200">{user.email}</td>

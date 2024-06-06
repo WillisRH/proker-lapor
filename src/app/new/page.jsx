@@ -32,6 +32,7 @@ export default function New() {
       <Navbar />
       <div className="min-h-screen flex flex-col items-center justify-center">
         <NewPostcardForm />
+        <img src="../src/app/logodubes.png" alt="logo" />
       </div>
     </div>
   );
