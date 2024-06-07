@@ -73,20 +73,19 @@ export default function PostcardPreviewPage() {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
       </head>
       <body className={`min-h-screen ${backgroundColor} text-white flex flex-col items-center justify-center`}>
-        <div className='text-right'>
-        <button
-          className="backbtn bg-transparent text-white flex items-center gap-2 mb-4"
-          onClick={() => router.push('/')}
-        >
-          <i className="fa fa-sign-out" aria-hidden="true"></i>
-          <h3>Back</h3>
-        </button>
+        <div className='text-right absolute top-10 left-10'>
+          <button
+            className="backbtn bg-transparent text-white flex items-center gap-2 mb-4 p-2 text-xl"
+            onClick={() => router.push('/')}
+          >
+            <i className="fa fa-sign-out" aria-hidden="true"></i>
+            <h3>Back</h3>
+          </button>
         </div>
-        <div className="flex flex-col items-center mb-4">
-          {/* <label htmlFor="background-color" className="text-white mb-2">Change Background Color:</label> */}
+        <div className="absolute right-10 top-16">
           <select
             id="background-color"
-            className="text-black"
+            className="text-black p-2 rounded"
             onChange={handleBackgroundColorChange}
           >
             <option value="bg-purple-900">Purple - Black</option>

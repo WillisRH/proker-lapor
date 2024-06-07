@@ -221,7 +221,7 @@ export default function PostcardDetailPage() {
               <div className="mt-6">
                 <h3 className="text-lg font-bold mb-2 text-gray-800">Performance:</h3>
                 <PerformanceChart performances={performanceValues}  />
-                <p className="text-gray-800 mt-2">
+                <p className="text-gray-800 mt-2 mb-4">
                   Performance Report Created at <strong>{moment(postcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
                 </p>
               </div>
@@ -239,7 +239,7 @@ export default function PostcardDetailPage() {
                 onClick={handleDelete}
                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded bottom-2 left-2"
               >
-                Delete
+                Delete All
               </button>
             )}
           </div>
@@ -251,11 +251,16 @@ export default function PostcardDetailPage() {
             {referToPostcards.map(refertoPostcard => (
               <div key={refertoPostcard._id} className="bg-gray-100 p-4 rounded-lg shadow-md mb-4">
                 <h1
-            className={`text-2xl font-bold text-center mb-8 text-gray-800 ${admin || owner ? 'cursor-copy' : ''}`}
+            className={`text-2xl font-bold text-center mb-2 text-gray-800`}
+          >
+            {refertoPostcard.title}
+          </h1>
+          <h1
+            className={`text-l italic underline text-center mb-8 text-gray-800 ${admin || owner ? 'cursor-copy' : ''}`}
             onClick={handleTitleClick}
           >
-            {moment(refertoPostcard.createdAt).format('MMMM Do YYYY, h:mm:ss a').toUpperCase()}
-          </h1>
+            {moment(refertoPostcard.createdAt).format('dddd MM-DD-YYYY').toUpperCase()}
+          </h1> 
                 <p className="text-gray-800">Title: {refertoPostcard.title}</p>
                 <p className="text-gray-800">Description: {refertoPostcard.description}</p>
                 {/* <p className="text-gray-800">Owner: {refertoPostcard.owner.join(', ')}</p> */}
@@ -266,7 +271,7 @@ export default function PostcardDetailPage() {
               </div>
             )}
                 <PerformanceChart performances={performanceValues} date={refertoPostcard} />
-                <p className="text-gray-800 mt-2">
+                <p className="text-gray-800 mt-2 mb-2">
                   Performance Report Created at <strong>{moment(refertoPostcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
                 </p>
               </div>

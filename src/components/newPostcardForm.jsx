@@ -3,7 +3,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import logodubes from '@/components/logodubes.png'
+
 
 function NewPostcardForm() {
   const [title, setTitle] = useState('');
@@ -127,7 +127,7 @@ function NewPostcardForm() {
           <span className="block text-center text-black mt-2">{performance}%</span>
         </div>
 
-        <h2 className="text-xl font-bold mb-4 text-center text-black">Refer To (Make sure to use this when you already have postcard):</h2>
+        {/* <h2 className="text-xl font-bold mb-4 text-center text-black">Refer To (Make sure to use this when you already have postcard):</h2> */}
         <div className="mb-6">
           {postcards.length > 0 ? (
             <ul className="space-y-2">

@@ -1,3 +1,5 @@
+"use client"
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -31,7 +33,7 @@ function Navbar() {
   const allowedDays = settings.allowedDays;
 
   return (
-    <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
+    <nav className="bg-gray-800 text-white p-2 flex justify-between items-center">
       <Image src={logodubes} alt="Logo" width={50} height={50} />
       <div className="font-bold text-xl">
         <Link href="/">LAPOR</Link>

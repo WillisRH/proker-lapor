@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import Link from 'next/link';
 import { isVerified } from '@/helper/isVerified';
 import ImportantButton from '@/components/importantbutton';
+import { BsFillPinAngleFill, BsPinAngleFill } from 'react-icons/bs';
 
 export default function Home() {
   const [postcards, setPostcards] = useState([]);
@@ -65,7 +66,7 @@ export default function Home() {
 <Link href={"/about-us"}>
         <div className="mb-8"> {/* Added margin bottom */}
           <div className="bg-gray-100 p-6 rounded-lg shadow-md text-black">
-            <h1 className="font-bold text-2xl mb-2">Mading Ekstrakulikuler dan Osis</h1>
+            <h1 className="font-bold text-3xl mb-2">Mading Ekstrakulikuler dan Osis</h1>
           </div>
         </div>
         </Link>
