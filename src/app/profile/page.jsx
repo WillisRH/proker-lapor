@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Navbar from "@/components/navbar";
+import ImportantButton from "@/components/importantbutton";
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -52,6 +53,7 @@ export default function ProfilePage() {
                     <p className="text-lg text-gray-800">Loading...</p>
                 )}
             </div>
+            <ImportantButton />
         </div>
     );
 }

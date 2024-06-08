@@ -237,7 +237,7 @@ export default function PostcardDetailPage() {
                 <h3 className="text-lg font-bold mb-2 text-gray-800">Performance:</h3>
                 <PerformanceChart performances={performanceValues}  />
                 <p className="text-gray-800 mt-2 mb-4">
-                  First Performance Report Created at <strong>{moment(postcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
+                  First Performance Report Created at <strong>{moment(postcard.createdAt).format('MMMM Do YYYY')}</strong>
                 </p>
               </div>
             )}
