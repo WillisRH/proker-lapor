@@ -3,11 +3,16 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [buttonText, setButtonText] = useState("Login");
+  const [buttonClass, setButtonClass] = useState(
+    "mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50"
+  );
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -17,13 +22,25 @@ export default function LoginPage() {
     try {
       setLoading(true);
       setButtonText("Logging in...");
+      setButtonClass(
+        "mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50"
+      );
       const response = await axios.post("/api/users/login", user);
       if (response.status === 200) {
+        toast.success(`Logged in as ${response.data.username}`, {
+          position: "top-right",
+        });
         router.push("/");
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setButtonText("Wrong Credentials");
+        toast.error('Wrong Credentials!', {
+          position: "top-right",
+        });
+        setButtonClass(
+          "mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 disabled:opacity-50"
+        );
       } else {
         console.log("Login failed", error.message);
       }
@@ -35,6 +52,9 @@ export default function LoginPage() {
   const handleFocus = () => {
     if (buttonText === "Wrong Credentials") {
       setButtonText("Login");
+      setButtonClass(
+        "mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50"
+      );
     }
   };
 
@@ -72,7 +92,7 @@ export default function LoginPage() {
         <button
           onClick={onLogin}
           disabled={loading}
-          className="mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 disabled:opacity-50"
+          className={buttonClass}
         >
           {loading ? "Logging in..." : buttonText}
         </button>
@@ -83,6 +103,7 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
+      <ToastContainer />
     </div>
   );
 }

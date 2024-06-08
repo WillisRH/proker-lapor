@@ -10,15 +10,13 @@ import Link from 'next/link';
 import { isVerified } from '@/helper/isVerified';
 import ImportantButton from '@/components/importantbutton';
 import { BsFillPinAngleFill, BsPinAngleFill } from 'react-icons/bs';
+import { FaReact } from 'react-icons/fa';
 
 export default function Home() {
   const [postcards, setPostcards] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // For loading state
   const router = useRouter(); // Initialize useRouter
-  // const verify = await isVerified();
-  // console.log(isVerified)
   
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true); // Set loading state to true
@@ -63,16 +61,23 @@ export default function Home() {
         {/* <NewPostcardForm />  */}
 
 
-<Link href={"/about-us"}>
-        <div className="mb-8"> {/* Added margin bottom */}
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md text-black">
-            <h1 className="font-bold text-3xl mb-2">Mading Ekstrakulikuler dan Osis</h1>
+        <Link href={"/about-us"}>
+          <div className="mb-8 relative"> {/* Added margin bottom and relative positioning */}
+            <div className="bg-gray-100 p-6 rounded-lg shadow-md text-black">
+              <h1 className="font-bold text-3xl mb-2">Mading Ekstrakulikuler dan Osis</h1>
+              <BsFillPinAngleFill className="absolute top-2 right-2 text-xl text-gray-700" /> 
+              {/* <FaReact className='absolute top-2 right-2 text-xl text-gray-700' /> Positioned the icon */}
+            </div>
           </div>
-        </div>
         </Link>
 
         {isLoading ? (
-          <div className='text-gray-800 text-2xl'>Loading...</div> // Show a loading indicator
+          <div className="flex items-center justify-center">
+            <svg className="animate-spin h-8 w-8 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+          </div> // Show a loading indicator
         ) : postcards.length === 0 ? (
           <div className='text-gray-800 text-2xl'>There is no postcard yet.</div> // Show message if no postcards
         ) : (

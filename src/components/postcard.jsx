@@ -4,6 +4,7 @@ import { BsFillPinAngleFill } from 'react-icons/bs';
 import { GiCactus } from 'react-icons/gi';
 import { FaReact } from 'react-icons/fa';
 import { GiButterflyFlower } from 'react-icons/gi';
+import settings from '@/lib/settings.json';
 
 function Postcard({ title, description, id, createdat }) {
   const MAX_DESCRIPTION_LENGTH = 100;
@@ -13,6 +14,8 @@ function Postcard({ title, description, id, createdat }) {
   if (description.length > MAX_DESCRIPTION_LENGTH) {
     shortDescription = description.substring(0, MAX_DESCRIPTION_LENGTH) + '...';
   }
+
+  const disabledecoration = settings.disabledecoration
 
   const colors = [
     'bg-[#cccbd9]',
@@ -45,11 +48,12 @@ function Postcard({ title, description, id, createdat }) {
   const SelectedIcon = icons[randomIconIndex];
 
   return (
+    <div>
     <Link href={`/postcard/${id}`}>
       <div className={`relative border border-gray-200 p-4 rounded-md w-72 ${cardColor} transition-transform hover:scale-105 hover:shadow-xl`}>
         <h2 className="font-bold text-lg mb-2 text-black">{title.toUpperCase()}</h2>
         <p className="text-black">{shortDescription}</p> {/* Display the shortened description */}
-        {showIcon && (
+        {!disabledecoration && showIcon && (
           <div className="absolute top-2 right-2 text-black">
             <SelectedIcon size={24} /> {/* Adjust the size as needed */}
           </div>
@@ -59,6 +63,7 @@ function Postcard({ title, description, id, createdat }) {
 
       
     </Link>
+    </div>
   );
 }
 

@@ -3,7 +3,8 @@
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function NewPostcardForm() {
   const [title, setTitle] = useState('');
@@ -52,9 +53,15 @@ function NewPostcardForm() {
       });
 
       if (response.ok) { 
+        toast.success(`Created postcard with title ${title}!`, {
+          position: "top-right",
+        });
         console.log('Postcard saved successfully');
         router.push('/');
       } else {
+        toast.error(`Failed when trying to make a postcard!`, {
+          position: "top-right",
+        });
         console.error('Failed to save postcard:', response.status, response.statusText);
       }
     } catch (error) {
@@ -153,6 +160,7 @@ function NewPostcardForm() {
           Submit
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
 }

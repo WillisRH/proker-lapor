@@ -35,7 +35,7 @@ function Navbar() {
   return (
     <nav className="bg-gray-800 text-white p-2 flex justify-between items-center">
       <Image src={logodubes} alt="Logo" width={50} height={50} />
-      <div className="font-bold text-xl">
+      <div className="absolute font-bold text-xl ml-20">
         <Link href="/">LAPOR</Link>
       </div>
       <ul className="flex space-x-6">

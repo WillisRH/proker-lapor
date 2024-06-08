@@ -3,6 +3,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -17,9 +19,15 @@ export default function SignupPage() {
         ...user,
         email: `${user.username}@lapor.com`,
       });
+      toast.success(`Signup an account as ${user.username}`, {
+        position: "top-right",
+      });
       router.push("/login");
     } catch (error) {
       console.log("Signup failed", error.message);
+      toast.error(`Error occured when trying to make an account!`, {
+        position: "top-right",
+      });
     }
   };
 
@@ -86,6 +94,7 @@ export default function SignupPage() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

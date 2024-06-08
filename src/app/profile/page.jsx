@@ -18,6 +18,17 @@ export default function ProfilePage() {
         }
     };
 
+    function ProfilePicture({ username }) {
+        if (!username) return null;
+      
+        const firstLetter = username.charAt(0).toUpperCase();
+        return (
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gray-200 text-gray-600 text-xl mb-4">
+            {firstLetter}
+          </div>
+        );
+      }
+
     useEffect(() => {
         // Fetch user details when the component mounts
         getUserDetails();
@@ -27,7 +38,8 @@ export default function ProfilePage() {
         <div>
             <Navbar />
             <div className="flex flex-col items-center justify-center min-h-screen py-2">
-                <h1 className="text-2xl font-bold mb-4 text-gray-900">Profile</h1>
+                <h1 className="text-4xl font-bold mb-4 text-gray-900 text-center mb-10">About {userData?.username}</h1>
+                <ProfilePicture username={userData?.username} />
                 {userData ? (
                     <div className="bg-gray-200 p-4 rounded-lg shadow-md text-black">
                         <p className="text-lg">Email: {userData.email}</p>

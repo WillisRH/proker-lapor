@@ -1,5 +1,8 @@
 {
-    "allowedDays": [7],
-    "visibleToVerifiedUser": false
+  "allowedDays": [
+    30,
+    8
+  ],
+  "visibleToVerifiedUser": false,
+  "disabledecoration": false
 }
-  

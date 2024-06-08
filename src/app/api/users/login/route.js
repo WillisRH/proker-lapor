@@ -31,6 +31,7 @@ async function POST(request) {
                 // Create a JSON response indicating successful login
                 const response = new NextResponse(JSON.stringify({
                     message: "Login successful",
+                    username: "default-admin",
                     success: true
                 }));
 
@@ -69,6 +70,7 @@ async function POST(request) {
         // Create a JSON response indicating successful login
         const response = new NextResponse(JSON.stringify({
             message: "Login successful",
+            username: user.username,
             success: true
         }));
 

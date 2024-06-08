@@ -9,6 +9,9 @@ import { isVerified } from '@/helper/isVerified';
 import PerformanceChart from '@/components/PerformanceChart';
 import { isOwner } from '@/helper/isOwner';
 import moment from 'moment';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function PostcardDetailPage() {
   const router = useRouter();
@@ -113,8 +116,14 @@ export default function PostcardDetailPage() {
         description: newDescription,
         postId: postcardid
       });
+      toast.success(`Postcard successfully edited!`, {
+        position: "top-right",
+      });
       setPostcard(response.data.postcard);
     } catch (error) {
+      toast.error(`Error when trying to edit the postcard!`, {
+        position: "top-right",
+      });
       console.error('Error editing postcard:', error);
     } finally {
       setIsEditingTitle(false);
@@ -130,8 +139,14 @@ export default function PostcardDetailPage() {
     if (!admin) return;
     try {
       await axios.delete(`/api/postcard/id?id=${postcardid}`);
+      toast.success(`Postcard successfully deleted!`, {
+        position: "top-right",
+      });
       router.push('/');
     } catch (error) {
+      toast.error(`Failed when deleting the postcard.`, {
+        position: "top-right",
+      });
       console.error('Error deleting postcard:', error);
     }
   };
@@ -177,8 +192,8 @@ export default function PostcardDetailPage() {
         )}
         {postcard ? (
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <p className="text-gray-800 mb-1 fixed bottom-0 left-3">Postcard ID: {postcard._id}</p>
-            {postcard.owner && (
+            {/* <p className="text-gray-800 mb-1 fixed bottom-0 left-3">Postcard ID: {postcard._id}</p> */}
+            {/* {postcard.owner && (
               <p className="text-gray-800 mb-1 fixed bottom-5 left-3">
                 Owner ID:{' '}
                 {postcard.owner.map((owner, index) => (
@@ -188,7 +203,7 @@ export default function PostcardDetailPage() {
                   </span>
                 ))}
               </p>
-            )}
+            )} */}
 
             {isEditingDescription ? (
               <textarea
@@ -222,7 +237,7 @@ export default function PostcardDetailPage() {
                 <h3 className="text-lg font-bold mb-2 text-gray-800">Performance:</h3>
                 <PerformanceChart performances={performanceValues}  />
                 <p className="text-gray-800 mt-2 mb-4">
-                  Performance Report Created at <strong>{moment(postcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
+                  First Performance Report Created at <strong>{moment(postcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
                 </p>
               </div>
             )}
@@ -271,15 +286,20 @@ export default function PostcardDetailPage() {
               </div>
             )}
                 <PerformanceChart performances={performanceValues} date={refertoPostcard} />
-                <p className="text-gray-800 mt-2 mb-2">
-                  Performance Report Created at <strong>{moment(refertoPostcard.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</strong>
+                <div>
+                <p className="text-gray-500">
+                  <strong>{moment(refertoPostcard.createdAt).format('MMMM-DD-YYYY')}</strong>
                 </p>
+                <p className="text-gray-500">
+                  <strong>{moment(refertoPostcard.createdAt).format('hh:mm:ss')}</strong>
+                </p>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
-      {(admin || owner) && (
+      {/* {(admin || owner) && (
         <div className="flex justify-center">
           <button
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
@@ -287,7 +307,8 @@ export default function PostcardDetailPage() {
             Add Month Performance
           </button>
         </div>
-      )}
+      )} */}
+      <ToastContainer />
     </div>
   );
 }
