@@ -11,6 +11,7 @@ import { isOwner } from '@/helper/isOwner';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import settings from '@/lib/settings.json'
 
 
 export default function PostcardDetailPage() {
@@ -27,6 +28,7 @@ export default function PostcardDetailPage() {
   const [owner, setOwner] = useState(false);
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+  const privatemessage = settings.privateMessage
 
   useEffect(() => {
     const checkVerified = async () => {
@@ -226,7 +228,7 @@ export default function PostcardDetailPage() {
                 </p>
               </div>
             )}
-            {(admin || owner) && postcard.privatemsg && (
+            {(admin || owner) && privatemessage && postcard.privatemsg && (
               <div className="bg-gray-200 p-4 rounded-md mt-4">
                 <h3 className="text-lg font-bold mb-2 text-gray-800">Private Message:</h3>
                 <p className="text-gray-800">{postcard.privatemsg}</p>
@@ -234,7 +236,7 @@ export default function PostcardDetailPage() {
             )}
             {(admin || owner) && postcard.performance && (
               <div className="mt-6">
-                <h3 className="text-lg font-bold mb-2 text-gray-800">Performance:</h3>
+                {/* <h3 className="text-lg font-bold mb-2 text-gray-800">Performance:</h3> */}
                 <PerformanceChart performances={performanceValues}  />
                 <p className="text-gray-800 mt-2 mb-4">
                   First Performance Report Created at <strong>{moment(postcard.createdAt).format('MMMM Do YYYY')}</strong>
@@ -271,15 +273,14 @@ export default function PostcardDetailPage() {
             {refertoPostcard.title}
           </h1>
           <h1
-            className={`text-l italic underline text-center mb-8 text-gray-800 ${admin || owner ? 'cursor-copy' : ''}`}
-            onClick={handleTitleClick}
+            className={`text-l italic underline text-center mb-8 text-gray-800`}
           >
             {moment(refertoPostcard.createdAt).format('dddd MM-DD-YYYY').toUpperCase()}
           </h1> 
                 <p className="text-gray-800">Title: {refertoPostcard.title}</p>
                 <p className="text-gray-800">Description: {refertoPostcard.description}</p>
                 {/* <p className="text-gray-800">Owner: {refertoPostcard.owner.join(', ')}</p> */}
-                {(admin || owner) && refertoPostcard.privatemsg && (
+                {(admin || owner) && privatemessage && refertoPostcard.privatemsg && (
               <div className="bg-gray-200 p-4 rounded-md mt-4">
                 <h3 className="text-lg font-bold mb-2 text-gray-800">Private Message:</h3>
                 <p className="text-gray-800">{refertoPostcard.privatemsg}</p>
@@ -287,12 +288,12 @@ export default function PostcardDetailPage() {
             )}
                 <PerformanceChart performances={performanceValues} date={refertoPostcard} />
                 <div>
-                <p className="text-gray-500">
-                  <strong>{moment(refertoPostcard.createdAt).format('MMMM-DD-YYYY')}</strong>
+                <p className="text-gray-500 mb-2">
+                  <strong>{moment(refertoPostcard.createdAt).format('MMMM-DD-YYYY').toUpperCase()}</strong>
                 </p>
-                <p className="text-gray-500">
+                {/* <p className="text-gray-500">
                   <strong>{moment(refertoPostcard.createdAt).format('hh:mm:ss')}</strong>
-                </p>
+                </p> */}
                 </div>
               </div>
             ))}

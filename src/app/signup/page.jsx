@@ -24,7 +24,7 @@ export default function SignupPage() {
       });
       router.push("/login");
     } catch (error) {
-      console.log("Signup failed", error.message);
+      // console.log("Signup failed", error.message);
       toast.error(`Error occured when trying to make an account!`, {
         position: "top-right",
       });

@@ -42,7 +42,7 @@ export default function LoginPage() {
           "mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 disabled:opacity-50"
         );
       } else {
-        console.log("Login failed", error.message);
+        console.error("Login failed", error.message);
       }
     } finally {
       setLoading(false);

@@ -5,7 +5,7 @@ export const isOwner = async (_id) => {
         const userid = await getUserData('_id');
 
         if (_id === userid) {
-            console.log("isowner", userid)
+            // console.log("isowner", userid)
             return true;
         }
         

@@ -10,7 +10,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function ManagePage() {
-  const [settings, setSettings] = useState({ allowedDays: [], visibleToVerifiedUser: false, disabledecoration: false });
+  const [settings, setSettings] = useState({
+    allowedDays: [],
+    visibleToVerifiedUser: false,
+    disabledecoration: false,
+    privateMessage: false,
+  });
   const [loading, setLoading] = useState(true);
   const [isAdminUser, setIsAdminUser] = useState(false);
   const router = useRouter();
@@ -32,7 +37,7 @@ export default function ManagePage() {
     try {
       const response = await axios.get('/api/settings');
       setSettings(response.data);
-      console.log(response.data)
+      // console.log(response.data);
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch settings:', error);
@@ -139,6 +144,19 @@ export default function ManagePage() {
                 <select
                   value={settings.disabledecoration}
                   onChange={(e) => setSettings({ ...settings, disabledecoration: e.target.value === 'true' })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-black"
+                >
+                  <option value="true">True</option>
+                  <option value="false">False</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-black">
+                  Private Message
+                </label>
+                <select
+                  value={settings.privateMessage}
+                  onChange={(e) => setSettings({ ...settings, privateMessage: e.target.value === 'true' })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-black"
                 >
                   <option value="true">True</option>

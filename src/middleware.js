@@ -26,11 +26,14 @@ export function middleware(request) {
 // It specifies the paths for which this middleware should be executed. 
 // In this case, it's applied to '/', '/profile', '/login', and '/signup'.
 export const config = {
-  matcher: [
-    '/',
-    '/profile',
-    '/login',
-    '/signup',
-    '/new',
-  ]
+  // matcher: [
+  //   '/',
+  //   '/profile',
+  //   '/login',
+  //   '/signup',
+  //   '/new',
+  //   '/manage',
+  //   '/manage/users'
+  // ]
+  matcher: '/((?!api|_next|static|public|favicon.ico).*)'
 };

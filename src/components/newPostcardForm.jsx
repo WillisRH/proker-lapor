@@ -36,7 +36,7 @@ function NewPostcardForm() {
     try {
       const res = await axios.get('/api/users/me');
       const userId = res.data.data._id;
-      console.log("Selected ", selectedPostcard);
+      // console.log("Selected ", selectedPostcard);
       const response = await fetch('/api/postcard', {
         method: 'POST',
         headers: { 
@@ -56,7 +56,7 @@ function NewPostcardForm() {
         toast.success(`Created postcard with title ${title}!`, {
           position: "top-right",
         });
-        console.log('Postcard saved successfully');
+        // console.log('Postcard saved successfully');
         router.push('/');
       } else {
         toast.error(`Failed when trying to make a postcard!`, {

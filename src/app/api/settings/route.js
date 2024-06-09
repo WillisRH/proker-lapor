@@ -20,9 +20,9 @@ export async function GET() {
 export async function POST(req) {
   try {
     const reqBody = await req.json();
-    const { allowedDays, visibleToVerifiedUser, disabledecoration } = reqBody;
+    const { allowedDays, visibleToVerifiedUser, disabledecoration, privateMessage } = reqBody;
 
-    const newSettings = { allowedDays, visibleToVerifiedUser, disabledecoration };
+    const newSettings = { allowedDays, visibleToVerifiedUser, disabledecoration, privateMessage };
     
     fs.writeFileSync(settingsPath, JSON.stringify(newSettings, null, 2), 'utf8');
 

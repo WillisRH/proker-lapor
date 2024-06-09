@@ -13,7 +13,7 @@ export default function ImportantButton() {
       await axios.get('/api/users/logout');
       router.push('/login');
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 

@@ -4,11 +4,11 @@ export const getUserData = async (param) => {
     try {
         const res = await axios.get('/api/users/me');
         const userData = res.data.data;
-        console.log("User Data:", userData);
+        // console.log("User Data:", userData);
 
         // Check if the requested parameter exists in the user data
         if (param in userData) {
-            console.log(`${param}:`, userData[param]);
+            // console.log(`${param}:`, userData[param]);
             return userData[param];
         } else {
             console.error(`Parameter "${param}" does not exist in user data.`);

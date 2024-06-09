@@ -1,8 +1,9 @@
 {
   "allowedDays": [
     30,
-    8
+    9
   ],
   "visibleToVerifiedUser": false,
-  "disabledecoration": false
+  "disabledecoration": false,
+  "privateMessage": true
 }
